@@ -40,6 +40,7 @@ public class Graph<K,V> implements IGraph<K, V>
 			adj[v] = new Bag<V>();
 		}
 		harve = new Haversine();
+		Marked = new boolean[size];
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class Graph<K,V> implements IGraph<K, V>
 			double costo = harve.distance(ini.darLatitud(), ini.darLongitud(), fin.darLatitud(), fin.darLongitud());
 
 			Vertice nuevo1 = (Vertice) adj[(int) idVertexFin].iterator().next();
-			Vertice nuevo2 = (Vertice) adj[(int) idVertexIni].iterator().next();
+			Vertice nuevo2 = (Vertice) adj[(int) idVertexIni].iterator().next();
 			adj[(int) idVertexIni].add((V) new Vertice((int)idVertexFin, nuevo1.darLongitud(), nuevo1.darLongitud(), nuevo1.darMID()));
 			adj[(int) idVertexFin].add((V) new Vertice((int)idVertexIni, nuevo2.darLongitud(), nuevo2.darLongitud(), nuevo2.darMID()));
 
@@ -137,22 +138,18 @@ public class Graph<K,V> implements IGraph<K, V>
 			adj[(int) actual1.darId()].cambiarItem((Vertice) infoVertex);			
 		}		
 	}
-
-	double a ; 
-	@Override
+	
 	public double getCostArc(K idVertexIni, K idVertexFin) {
 
 		return arcos.buscar(new Arco((int)idVertexIni, (int)idVertexFin, 0)).darCosto();
 	}
 
-	@Override
 	public void setCostArc(K idVertexIni, K idVertexFin, double cost) {
 		arcos.buscar(new Arco((int)idVertexIni, (int)idVertexFin, 0)).cambiarcosto(cost);
 	}
 
-	@Override
-	public void addVertex(K idVertex, V infoVertex) {
-		// TODO Auto-generated method stub
+	public void addVertex(K idVertex, V infoVertex)
+	{
 		adj[(int) idVertex].add(infoVertex);
 		V++;
 
@@ -162,10 +159,8 @@ public class Graph<K,V> implements IGraph<K, V>
 		}
 	}
 
-	@Override
-	public Iterable<K> adj(K idVertex) {
-		// TODO Auto-generated method stub
-
+	public Iterable<K> adj(K idVertex)
+	{
 		Stack<Integer> respuesta = new Stack<>();
 
 		Iterator<V> x = adj[(int)idVertex].iterator();
@@ -179,9 +174,8 @@ public class Graph<K,V> implements IGraph<K, V>
 		return (Iterable<K>) respuesta;		
 	}
 
-	@Override
-	public void uncheck() {
-		// TODO Auto-generated method stub
+	public void uncheck()
+	{
 		for(int i = 0; i < Marked.length; i++)
 		{
 			Marked[i] = false;
@@ -197,9 +191,12 @@ public class Graph<K,V> implements IGraph<K, V>
 	public int cc()
 	{
 		int count = 0; 
-		for (int v = 0; v < V(); v++) {
-			if (!Marked[v]) {
-				dfs( v);
+		for (int v = 0; v < V(); v++)
+		{
+			System.out.println("Revisando vértice #" + v);
+			if(!adj[v].isEmpty() && !Marked[v]) 
+			{
+				dfs(v);
 				count++;
 			}
 		}
