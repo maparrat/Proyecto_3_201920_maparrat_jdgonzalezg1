@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.data_structures.Bag;
 import model.data_structures.Graph;
-import model.data_structures.Stack;
 import model.logic.Vertice;
 
 public class TestGraph 
@@ -22,37 +22,37 @@ public class TestGraph
 		grafo = new Graph<>(5);
 		
 		 a = new  Vertice(1, 1, 1, 1);
-		 b = new  Vertice(2,2, 2, 2);
+		 b = new  Vertice(2, 2, 2, 2);
 		 c = new  Vertice(3, 3, 3, 3);
-		 d = new  Vertice(4,4, 4,4);
+		 d = new  Vertice(4, 4, 4, 4);
 	}
+	
 	//  1----------2 
-	//  |          |
 	//  |          |
     //  3----------4
 	// 1 = a 
 	// 2 = b
 	// 3 = c
 	// 4 = d 
-	// ------  costo 10
+	// ----------  costo 10
 	// |       costo 5
+	
 	public void setUp1()
 	{
-		
-		grafo.addVertex(1,a);
+		grafo.addVertex(1, a);
 		grafo.addVertex(2, b);
 		grafo.addVertex(3, c);
 		grafo.addVertex(4, d);
 		grafo.addEdge(1, 2, 10.0);
 		grafo.addEdge(3, 4, 10.0);
 		grafo.addEdge(1, 3, 5.0);
-		grafo.addEdge(2, 4,5.0);
-		grafo.arcos.darElemento(0).cambiarcosto(10);
-		grafo.arcos.darElemento(1).cambiarcosto(10);
-		grafo.arcos.darElemento(2).cambiarcosto(5);
-		grafo.arcos.darElemento(3).cambiarcosto(5);
-	
+		grafo.addEdge(2, 4, 5.0);
+		grafo.arcos.darElemento(0).cambiarCostoDistancia(10);
+		grafo.arcos.darElemento(1).cambiarCostoDistancia(10);
+		grafo.arcos.darElemento(2).cambiarCostoDistancia(5);
+		grafo.arcos.darElemento(3).cambiarCostoDistancia(5);
 	}
+	
 	@Test
 	public void testConstructor()
 	{
@@ -62,6 +62,7 @@ public class TestGraph
 		assertEquals(4, grafo.V());
 		assertEquals(4, grafo.E());
 	}
+	
 	@Test
 	public void testGetInfoVertex()
 	{
@@ -72,6 +73,7 @@ public class TestGraph
 		assertEquals(grafo.getInfoVertex(3), c);
 		assertEquals(grafo.getInfoVertex(4), d);
 	}
+	
 	@Test
 	public void testGetcost()
 	{
@@ -82,16 +84,18 @@ public class TestGraph
 		assertEquals(grafo.getCostArc(1, 3), 5.0, 0);
 		assertEquals(grafo.getCostArc(2, 4), 5.0, 0);
 	}
+	
 	@Test
 	public void testAdj()
 	{
 		setUp1();
 
 		assertNotNull(grafo.adj(1));
-		Stack  x = new  Stack<>();
-		x = (Stack) grafo.adj(1);
-		assertEquals(x.size(), 4);		
+		Bag x = (Bag) grafo.adj(1);
+		
+		assertEquals(3, x.size());		
 	}
+	
 	@Test
 	public void testUncheck()
 	{		
@@ -112,6 +116,6 @@ public class TestGraph
 	{	
 		setUp1();
 
-		assertEquals(grafo.cc(), 4);
+		assertEquals(1, grafo.cc());
 	}
 }

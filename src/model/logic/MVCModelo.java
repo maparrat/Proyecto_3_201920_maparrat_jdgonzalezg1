@@ -14,7 +14,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import com.opencsv.CSVReader;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
+
 import model.data_structures.ArregloDinamico;
+import model.data_structures.Bag;
 import model.data_structures.Graph;
 import model.data_structures.Haversine;
 import model.data_structures.Stack;
@@ -29,17 +33,24 @@ public class MVCModelo{
 	 */
 	private Graph<Integer, Vertice> grafo;
 
+	private ArregloDinamico<UBERTrip>[] viajes;
+
 	/**
 	 * Constructor del modelo del mundo
 	 */
 	public MVCModelo()
 	{
 		grafo = new Graph<>(250000);
+		viajes = new ArregloDinamico[1160];
+
+		for (int v = 0; v < 1160; v++) {
+			viajes[v] = new ArregloDinamico(1);
+		}
 	}
 
 	public void cargarGrafo() throws Exception
 	{
-		BufferedReader br = new BufferedReader(new FileReader(new File("data/bogota_vertices.txt")));
+		BufferedReader br = new BufferedReader(new FileReader(new File("datai/bogota_vertices.txt")));
 		String linea = br.readLine();
 		linea = br.readLine();
 
@@ -58,7 +69,7 @@ public class MVCModelo{
 		}
 		br.close();
 
-		br = new BufferedReader(new FileReader(new File("data/bogota_arcos.txt")));
+		br = new BufferedReader(new FileReader(new File("datai/bogota_arcos.txt")));
 		linea = br.readLine();
 
 		while(linea != null)
@@ -67,13 +78,62 @@ public class MVCModelo{
 
 			for (int i = 1; i < datos.length; i++)
 			{
-				grafo.addEdge(Integer.parseInt(datos[0]), Integer.parseInt(datos[i]), 0);
-			}
+				double costoTiempo = 0;
+				if(grafo.getInfoVertex(Integer.parseInt(datos[0])) != null)
+				{
+					ArregloDinamico<UBERTrip> x = viajes[grafo.getInfoVertex(Integer.parseInt(datos[0])).darMID()-1];
 
+					for (int j = 0; j < x.darCapacidad(); j++)
+					{
+						if(x.darElemento(j) != null && x.darElemento(j).darDatosViaje()[1] == Integer.parseInt(datos[i]))
+						{
+							costoTiempo += x.darElemento(j).darDatosViaje()[3];
+						}
+					}
+
+					if(x.darCapacidad() == 0)
+					{
+						if(grafo.getInfoVertex(Integer.parseInt(datos[0])).darMID() == grafo.getInfoVertex(Integer.parseInt(datos[i])).darMID())
+						{
+							costoTiempo = 10;
+						}
+						else
+						{
+							costoTiempo = 100;
+						}
+					}
+					else
+					{
+						costoTiempo = (costoTiempo / x.darCapacidad());
+					}
+					grafo.addEdge(Integer.parseInt(datos[0]), Integer.parseInt(datos[i]), costoTiempo);
+				}
+			}
+			
 			linea = br.readLine();
+			System.out.println(Integer.parseInt(datos[0]));
 		}
 		br.close();
 	}
+
+	public void cargarArchivoCSVWeekly() throws Exception
+	{
+		boolean primeraLectura = true;
+
+		CSVReader reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-1-WeeklyAggregate.csv"));
+
+		for(String[] line: reader)
+		{
+			if(!primeraLectura)
+			{
+				UBERTrip dato = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4]), Float.parseFloat(line[5]), Float.parseFloat(line[6]));
+				int x = Short.parseShort(line[0]);
+				viajes[x-1].agregar(dato);
+			}
+			primeraLectura = false;
+		}
+		reader.close();
+	}	
 
 	//----------------------------
 	//METODOS
@@ -109,11 +169,10 @@ public class MVCModelo{
 				vertice.put("vertice", datosVertice);
 
 				listaVertices.add(vertice);
-				System.out.println(actual.darId());
 			}
 		}
 
-		try (FileWriter file1 = new FileWriter(new File("data/vertices.json"))) {
+		try (FileWriter file1 = new FileWriter(new File("datai/vertices.json"))) {
 
 			file1.write(listaVertices.toJSONString());
 			file1.flush();
@@ -130,7 +189,9 @@ public class MVCModelo{
 			JSONObject datosArco = new JSONObject();
 			datosArco.put("origen", actual.darOrigen());
 			datosArco.put("destino", actual.darDest());
-			datosArco.put("costo", actual.darCosto());
+			datosArco.put("costoDistancia", actual.darCostoDistancia());
+			datosArco.put("costoTiempo", actual.darCostoTiempo());
+			datosArco.put("costoVelocidad", actual.darCostoVelocidad());
 
 			JSONObject arco = new JSONObject(); 
 			arco.put("arco", datosArco);
@@ -139,7 +200,7 @@ public class MVCModelo{
 			System.out.println(i);
 		}
 
-		try (FileWriter file2 = new FileWriter(new File("data/arcos.json"))) {
+		try (FileWriter file2 = new FileWriter(new File("datai/arcos.json"))) {
 
 			file2.write(listaArcos.toJSONString());
 			file2.flush();
@@ -154,7 +215,7 @@ public class MVCModelo{
 
 		JSONParser jsonParser = new JSONParser();
 
-		try (FileReader reader = new FileReader("data/vertices.json"))
+		try (FileReader reader = new FileReader("datai/vertices.json"))
 		{
 			Object obj = jsonParser.parse(reader);
 
@@ -177,7 +238,7 @@ public class MVCModelo{
 
 		jsonParser = new JSONParser();
 
-		try (FileReader reader = new FileReader("data/arcos.json"))
+		try (FileReader reader = new FileReader("datai/arcos.json"))
 		{
 			Object obj = jsonParser.parse(reader);
 
@@ -188,7 +249,7 @@ public class MVCModelo{
 				JSONObject actual = (JSONObject) array.get(i);
 				JSONObject arcoActual = (JSONObject) actual.get("arco");
 
-				Arco nuevo = new Arco(((Long)arcoActual.get("origen")).intValue(), ((Long)arcoActual.get("destino")).intValue(), (double)arcoActual.get("costo"));
+				Arco nuevo = new Arco(((Long)arcoActual.get("origen")).intValue(), ((Long)arcoActual.get("destino")).intValue(), (double)arcoActual.get("costoDistancia"), (double)arcoActual.get("costoTiempo"), (double)arcoActual.get("costoVelocidad"));
 
 				grafo.addEdge(((Long)arcoActual.get("origen")).intValue(), ((Long)arcoActual.get("destino")).intValue(), (double)arcoActual.get("costo"));
 				arcosCargados.agregar(nuevo);
@@ -200,19 +261,12 @@ public class MVCModelo{
 		grafo.arcos = arcosCargados;
 	}
 
-	/**
-	 * line = [{lat: 0, lng: 16},{lat: 2, lng: 16}];
-      path = new google.maps.Polyline({path: line, strokeColor: '#FF0000', strokeWeight: 2});
-      path.setMap(map);
-	 * @throws Exception 
-	 */	
-
 	public void crearMapa() throws Exception 
 	{
-		FileReader reader = new FileReader(new File("data/index.txt"));
+		FileReader reader = new FileReader(new File("datai/index.txt"));
 		BufferedReader bf = new BufferedReader(reader);
 
-		BufferedWriter pf = new BufferedWriter(new PrintWriter(new File("data/mapa.txt")));
+		BufferedWriter pf = new BufferedWriter(new PrintWriter(new File("datai/mapa.txt")));
 
 		boolean llego = false;
 		while(llego == false)
@@ -230,8 +284,6 @@ public class MVCModelo{
 		for (int i = 0; i < grafo.arcos.darTamano(); i++)
 		{
 			Arco actual = grafo.arcos.darElemento(i);
-
-
 
 			Vertice vertice1 = grafo.getInfoVertex(actual.darOrigen());
 			Vertice vertice2 = grafo.getInfoVertex(actual.darDest());
@@ -258,5 +310,67 @@ public class MVCModelo{
 
 		bf.close();
 		pf.close();
+	}
+	//-------------------------------------
+	//Parte Inicial
+	//-------------------------------------
+	//3
+	public int idMasCercano()
+	{
+		return 0;
+	}
+	//--------------------------------------
+	//A
+	//--------------------------------------
+	//4A
+	public ArregloDinamico<Double> caminodeCostoMinimoUber(double latDes,double lonDes,double latorig,double lonOrig)
+	{
+		return null;
+	}
+	//5A
+	public ArregloDinamico<Vertice> verticesMenorVel(int n)
+	{
+		return null;
+	}
+	//6A
+	public void prim()
+	{
+
+	}
+	//-------------------------------------
+	//B
+	//-------------------------------------
+	//7B
+	public ArregloDinamico<Double> costoMinimoHarversine(double latDes,double lonDes,double latorig,double lonOrig)
+	{
+		return null;
+	}
+	//8B
+	public ArregloDinamico<Vertice> verticesAlcanzables(double Tiempo,double latorig,double lonOrig)
+	{
+		return null;
+	}
+	//9B
+	public void kruskal()
+	{
+
+	}
+	//----------------------------------------
+	//C
+	//----------------------------------------
+	//10C
+	public void grafSimplificado()
+	{
+
+	}
+	//11C
+	public ArregloDinamico<Vertice> dijkstra(int idOrigen, int idDestino)
+	{
+		return null;
+	}
+	//12C
+	public ArregloDinamico<Vertice> camninosMenorLong(int idOrigen)
+	{
+		return null;
 	}
 }

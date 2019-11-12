@@ -17,5 +17,5 @@ local.properties
 
 # Locally stored "Eclipse launch configurations"
 *.launch
-datai/*
-!datai/.gitignore
+data/*
+!data/.gitignore

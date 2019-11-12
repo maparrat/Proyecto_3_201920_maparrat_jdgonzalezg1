@@ -54,6 +54,8 @@ public class Controller {
 
 				try
 				{
+					modelo.cargarArchivoCSVWeekly();
+				
 					modelo.cargarGrafo();
 					System.out.println("Grafo cargado");
 					System.out.println("Cantidad de vertices cargados: " + modelo.darNumeroVertices());
@@ -79,6 +81,8 @@ public class Controller {
 					System.out.println("No se pudo persistir el grafo.\n---------");
 					e.printStackTrace();
 				}
+				
+				break;
 
 			case 3:
 
@@ -99,9 +103,6 @@ public class Controller {
 
 			case 4:
 
-				//ZonaUBER zona = modelo.consultarZonaPorID(MID);
-
-				//	System.out.println("Nombre: " + zona.darScanombre() + "\nPerímetro: " + (zona.darShape_leng()*100) + " kilómetros\nÁrea: " + (zona.darShape_area()*10000) + " kilómetros cuadrados\nNúmero de puntos: " + zona.darCoordinates().darNumeroElementos() + "\n---------");
 
 				break;
 

@@ -6,13 +6,15 @@ public class Arco implements Comparable<Arco>
 
 	private int destino;
 
-	private double costo;
+	private double costoDistancia, costoTiempo, costoVelocidad;
 
-	public Arco(int porigen, int pdestino,  double pcosto)
+	public Arco(int pOrigen, int pDestino,  double pCostoDistancia, double pCostoTiempo, double pCostoVelocidad)
 	{
-		origen = porigen;
-		destino = pdestino;
-		costo = pcosto;
+		origen = pOrigen;
+		destino = pDestino;
+		costoDistancia = pCostoDistancia;
+		costoTiempo = pCostoTiempo;
+		costoVelocidad = pCostoVelocidad;
 	}
 
 	public int darOrigen()
@@ -25,14 +27,34 @@ public class Arco implements Comparable<Arco>
 		return destino;
 	}
 
-	public double darCosto()
+	public double darCostoDistancia()
 	{
-		return costo;
+		return costoDistancia;
 	}
 
-	public void cambiarcosto(double param)
+	public void cambiarCostoDistancia(double param)
 	{
-		costo = param;
+		costoDistancia = param;
+	}
+	
+	public double darCostoTiempo()
+	{
+		return costoTiempo;
+	}
+
+	public void cambiarCostoTiempo(double param)
+	{
+		costoTiempo = param;
+	}
+	
+	public double darCostoVelocidad()
+	{
+		return costoVelocidad;
+	}
+
+	public void cambiarCostoVelocidad(double param)
+	{
+		costoVelocidad = param;
 	}
 
 	@Override

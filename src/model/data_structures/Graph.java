@@ -94,7 +94,7 @@ public class Graph<K,V> implements IGraph<K, V>
 	}
 
 	@Override
-	public void addEdge(K idVertexIni, K idVertexFin, double cost)
+	public void addEdge(K idVertexIni, K idVertexFin, double costoTiempo)
 	{
 
 		validateVertex((int) idVertexIni);
@@ -106,14 +106,14 @@ public class Graph<K,V> implements IGraph<K, V>
 			Vertice ini = (Vertice) adj[(int) idVertexIni].iterator().next();
 			Vertice fin = (Vertice) adj[(int) idVertexFin].iterator().next();
 
-			double costo = harve.distance(ini.darLatitud(), ini.darLongitud(), fin.darLatitud(), fin.darLongitud());
+			double costoDistancia = harve.distance(ini.darLatitud(), ini.darLongitud(), fin.darLatitud(), fin.darLongitud());
 
 			Vertice nuevo1 = (Vertice) adj[(int) idVertexFin].iterator().next();
 			Vertice nuevo2 = (Vertice) adj[(int) idVertexIni].iterator().next();
 			adj[(int) idVertexIni].add((V) new Vertice((int)idVertexFin, nuevo1.darLongitud(), nuevo1.darLongitud(), nuevo1.darMID()));
 			adj[(int) idVertexFin].add((V) new Vertice((int)idVertexIni, nuevo2.darLongitud(), nuevo2.darLongitud(), nuevo2.darMID()));
 
-			arcos.agregar(new Arco((Integer)idVertexIni, (Integer)idVertexFin, costo));
+			arcos.agregar(new Arco((Integer)idVertexIni, (Integer)idVertexFin, costoDistancia, costoTiempo, (costoDistancia/costoTiempo)));
 		}
 	}
 
@@ -141,11 +141,11 @@ public class Graph<K,V> implements IGraph<K, V>
 	
 	public double getCostArc(K idVertexIni, K idVertexFin) {
 
-		return arcos.buscar(new Arco((int)idVertexIni, (int)idVertexFin, 0)).darCosto();
+		return arcos.buscar(new Arco((int)idVertexIni, (int)idVertexFin, 0, 0, 0)).darCostoDistancia();
 	}
 
 	public void setCostArc(K idVertexIni, K idVertexFin, double cost) {
-		arcos.buscar(new Arco((int)idVertexIni, (int)idVertexFin, 0)).cambiarcosto(cost);
+		arcos.buscar(new Arco((int)idVertexIni, (int)idVertexFin, 0, 0, 0)).cambiarCostoDistancia(cost);
 	}
 
 	public void addVertex(K idVertex, V infoVertex)
