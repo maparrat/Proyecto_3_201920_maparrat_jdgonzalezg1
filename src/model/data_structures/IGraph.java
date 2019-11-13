@@ -66,6 +66,7 @@ public interface IGraph<K,V>
 	 *pertenece. En caso de que el grafo esté vacío, retorna 0.
 	 */
 	int cc();
+	
 	/**
 	 *Obtiene los vértices alcanzados a partir del vértice idVertex después de la
 	 *ejecución de los metodos dfs(K) y cc().

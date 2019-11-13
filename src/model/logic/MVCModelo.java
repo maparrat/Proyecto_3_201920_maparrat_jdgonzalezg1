@@ -109,7 +109,7 @@ public class MVCModelo{
 					grafo.addEdge(Integer.parseInt(datos[0]), Integer.parseInt(datos[i]), costoTiempo);
 				}
 			}
-			
+
 			linea = br.readLine();
 			System.out.println(Integer.parseInt(datos[0]));
 		}
@@ -118,21 +118,24 @@ public class MVCModelo{
 
 	public void cargarArchivoCSVWeekly() throws Exception
 	{
-		boolean primeraLectura = true;
-
-		CSVReader reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-1-WeeklyAggregate.csv"));
-
-		for(String[] line: reader)
+		if(viajes[0].darTamano() == 0 && viajes[1160-1].darTamano() == 0)
 		{
-			if(!primeraLectura)
+			boolean primeraLectura = true;
+
+			CSVReader reader = new CSVReader(new FileReader("data/bogota-cadastral-2018-1-WeeklyAggregate.csv"));
+
+			for(String[] line: reader)
 			{
-				UBERTrip dato = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4]), Float.parseFloat(line[5]), Float.parseFloat(line[6]));
-				int x = Short.parseShort(line[0]);
-				viajes[x-1].agregar(dato);
+				if(!primeraLectura)
+				{
+					UBERTrip dato = new UBERTrip(Short.parseShort(line[0]), Short.parseShort(line[1]), Short.parseShort(line[2]), Float.parseFloat(line[3]), Float.parseFloat(line[4]), Float.parseFloat(line[5]), Float.parseFloat(line[6]));
+					int x = Short.parseShort(line[0]);
+					viajes[x-1].agregar(dato);
+				}
+				primeraLectura = false;
 			}
-			primeraLectura = false;
+			reader.close();
 		}
-		reader.close();
 	}	
 
 	//----------------------------
@@ -311,6 +314,12 @@ public class MVCModelo{
 		bf.close();
 		pf.close();
 	}
+	
+	public int darCantidadCC()
+	{
+		return grafo.cc();
+	}
+	
 	//-------------------------------------
 	//Parte Inicial
 	//-------------------------------------
@@ -327,16 +336,19 @@ public class MVCModelo{
 	{
 		return null;
 	}
+	
 	//5A
 	public ArregloDinamico<Vertice> verticesMenorVel(int n)
 	{
 		return null;
 	}
+	
 	//6A
 	public void prim()
 	{
 
 	}
+	
 	//-------------------------------------
 	//B
 	//-------------------------------------
@@ -345,16 +357,19 @@ public class MVCModelo{
 	{
 		return null;
 	}
+	
 	//8B
 	public ArregloDinamico<Vertice> verticesAlcanzables(double Tiempo,double latorig,double lonOrig)
 	{
 		return null;
 	}
+	
 	//9B
 	public void kruskal()
 	{
 
 	}
+	
 	//----------------------------------------
 	//C
 	//----------------------------------------
@@ -363,11 +378,13 @@ public class MVCModelo{
 	{
 
 	}
+	
 	//11C
 	public ArregloDinamico<Vertice> dijkstra(int idOrigen, int idDestino)
 	{
 		return null;
 	}
+	
 	//12C
 	public ArregloDinamico<Vertice> camninosMenorLong(int idOrigen)
 	{
