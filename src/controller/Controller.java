@@ -56,6 +56,7 @@ public class Controller {
 				{
 					modelo.cargarArchivoCSVWeekly();
 					modelo.cargarGrafo();
+					imprimirInformacionGrafoCargado();
 				}
 				catch(Exception e)
 				{					
@@ -70,7 +71,7 @@ public class Controller {
 				try
 				{
 					modelo.escribirJSON();
-					System.out.println("El grafo se guardó en formato JSON\n---------");
+					System.out.println("---------\nEl grafo se guardó en formato JSON\n---------");
 				}
 				catch (Exception e)
 				{
@@ -85,6 +86,7 @@ public class Controller {
 				try
 				{
 					modelo.leerJSON();
+					imprimirInformacionGrafoCargado();
 				}
 				catch(Exception e)
 				{					
@@ -117,14 +119,16 @@ public class Controller {
 
 	public void imprimirInformacionGrafoCargado()
 	{
-		System.out.println("Grafo cargado");
-		System.out.println("Cantidad de vertices cargados: " + modelo.darNumeroVertices());
-		System.out.println("Cantidad de arcos cargados: " + modelo.darNumeroArcos());
-		System.out.println("Cantidad de componentes conectadas: " + modelo.darCantidadCC() + "\n---------");
 		try
 		{
 			modelo.crearMapa();
-			System.out.println("Se creo el mapa correctamente en la carpeta /datai. Cambiar el tipo de archivo a .html para visualizarlo");	
+			int numCC = modelo.darCantidadCC();
+
+			System.out.println("---------\nGrafo cargado");
+			System.out.println("Cantidad de vertices cargados: " + modelo.darNumeroVertices());
+			System.out.println("Cantidad de arcos cargados: " + modelo.darNumeroArcos());
+			System.out.println("Cantidad de componentes conectadas: " + numCC);
+			System.out.println("Se creo el mapa correctamente en la carpeta /datai. Cambiar el tipo de archivo a .html para visualizarlo\n---------");	
 		}
 		catch (Exception e) {e.printStackTrace();}
 	}	

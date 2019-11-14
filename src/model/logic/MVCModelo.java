@@ -82,18 +82,19 @@ public class MVCModelo{
 				if(grafo.getInfoVertex(Integer.parseInt(datos[0])) != null)
 				{
 					ArregloDinamico<UBERTrip> x = viajes[grafo.getInfoVertex(Integer.parseInt(datos[0])).darMID()-1];
-
+					int denominador = 0;
 					for (int j = 0; j < x.darCapacidad(); j++)
 					{
 						if(x.darElemento(j) != null && x.darElemento(j).darDatosViaje()[1] == Integer.parseInt(datos[i]))
 						{
 							costoTiempo += x.darElemento(j).darDatosViaje()[3];
+							denominador ++;
 						}
 					}
 
-					if(x.darCapacidad() == 0)
-					{
-						if(grafo.getInfoVertex(Integer.parseInt(datos[0])).darMID() == grafo.getInfoVertex(Integer.parseInt(datos[i])).darMID())
+					if(denominador == 0)
+					{						
+						if(grafo.getInfoVertex(Integer.parseInt(datos[0])) != null && grafo.getInfoVertex(Integer.parseInt(datos[i])) != null && grafo.getInfoVertex(Integer.parseInt(datos[0])).darMID() == grafo.getInfoVertex(Integer.parseInt(datos[i])).darMID())
 						{
 							costoTiempo = 10;
 						}
@@ -104,7 +105,7 @@ public class MVCModelo{
 					}
 					else
 					{
-						costoTiempo = (costoTiempo / x.darCapacidad());
+						costoTiempo = (costoTiempo / denominador);
 					}
 					grafo.addEdge(Integer.parseInt(datos[0]), Integer.parseInt(datos[i]), costoTiempo);
 				}
@@ -254,7 +255,7 @@ public class MVCModelo{
 
 				Arco nuevo = new Arco(((Long)arcoActual.get("origen")).intValue(), ((Long)arcoActual.get("destino")).intValue(), (double)arcoActual.get("costoDistancia"), (double)arcoActual.get("costoTiempo"), (double)arcoActual.get("costoVelocidad"));
 
-				grafo.addEdge(((Long)arcoActual.get("origen")).intValue(), ((Long)arcoActual.get("destino")).intValue(), (double)arcoActual.get("costo"));
+				grafo.addEdge(((Long)arcoActual.get("origen")).intValue(), ((Long)arcoActual.get("destino")).intValue(), (double)arcoActual.get("costoTiempo"));
 				arcosCargados.agregar(nuevo);
 			}
 		}
@@ -314,12 +315,12 @@ public class MVCModelo{
 		bf.close();
 		pf.close();
 	}
-	
+
 	public int darCantidadCC()
 	{
 		return grafo.cc();
 	}
-	
+
 	//-------------------------------------
 	//Parte Inicial
 	//-------------------------------------
@@ -336,19 +337,19 @@ public class MVCModelo{
 	{
 		return null;
 	}
-	
+
 	//5A
 	public ArregloDinamico<Vertice> verticesMenorVel(int n)
 	{
 		return null;
 	}
-	
+
 	//6A
 	public void prim()
 	{
 
 	}
-	
+
 	//-------------------------------------
 	//B
 	//-------------------------------------
@@ -357,19 +358,19 @@ public class MVCModelo{
 	{
 		return null;
 	}
-	
+
 	//8B
 	public ArregloDinamico<Vertice> verticesAlcanzables(double Tiempo,double latorig,double lonOrig)
 	{
 		return null;
 	}
-	
+
 	//9B
 	public void kruskal()
 	{
 
 	}
-	
+
 	//----------------------------------------
 	//C
 	//----------------------------------------
@@ -378,13 +379,13 @@ public class MVCModelo{
 	{
 
 	}
-	
+
 	//11C
 	public ArregloDinamico<Vertice> dijkstra(int idOrigen, int idDestino)
 	{
 		return null;
 	}
-	
+
 	//12C
 	public ArregloDinamico<Vertice> camninosMenorLong(int idOrigen)
 	{

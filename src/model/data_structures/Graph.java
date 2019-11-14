@@ -96,13 +96,12 @@ public class Graph<K,V> implements IGraph<K, V>
 	@Override
 	public void addEdge(K idVertexIni, K idVertexFin, double costoTiempo)
 	{
-
 		validateVertex((int) idVertexIni);
 		validateVertex((int) idVertexFin);
-		E++;
 
 		if(adj[(int) idVertexIni].size() != 0 && adj[(int) idVertexFin].size() != 0)
 		{
+			E++;
 			Vertice ini = (Vertice) adj[(int) idVertexIni].iterator().next();
 			Vertice fin = (Vertice) adj[(int) idVertexFin].iterator().next();
 
