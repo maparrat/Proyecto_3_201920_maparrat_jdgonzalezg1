@@ -129,6 +129,7 @@ public class Controller {
 			case 5:
 
 				modelo.prim();
+				modelo.kruskal();
 				
 				break;
 

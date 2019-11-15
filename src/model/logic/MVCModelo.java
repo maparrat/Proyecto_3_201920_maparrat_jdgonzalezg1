@@ -21,6 +21,9 @@ import model.data_structures.ArregloDinamico;
 import model.data_structures.Bag;
 import model.data_structures.Graph;
 import model.data_structures.Haversine;
+import model.data_structures.KruskalMST;
+import model.data_structures.KruskalMSTtime;
+import model.data_structures.KruskalMSTvel;
 import model.data_structures.PrimMST;
 import model.data_structures.PrimMSTtime;
 import model.data_structures.PrimMSTvel;
@@ -39,13 +42,19 @@ public class MVCModelo{
 	private ArregloDinamico<UBERTrip>[] viajes;
 
 	private Haversine haver;
-	
+
 	private PrimMST primDistancia;
-	
+
 	private PrimMSTtime primTiempo;
-	
+
 	private PrimMSTvel primVelocidad;
+
+	private KruskalMST kruskalDistancia;
 	
+	private KruskalMSTtime kruskalTiempo;
+	
+	private KruskalMSTvel kruskalVelocidad;
+
 	/**
 	 * Constructor del modelo del mundo
 	 */
@@ -341,11 +350,11 @@ public class MVCModelo{
 	{
 		int respuesta = -1;
 		double menorDistancia = Double.POSITIVE_INFINITY;
-		
+
 		for (int i = 0; i < grafo.size(); i++)
 		{
 			Vertice actual = grafo.getInfoVertex(i);
-			
+
 			if(actual != null)
 			{
 				double distanciaActual = haver.distance(pLatitud, pLongitud, actual.darLatitud(), actual.darLongitud());
@@ -356,10 +365,10 @@ public class MVCModelo{
 				}
 			}
 		}
-		
+
 		return respuesta;
 	}
-	
+
 	//--------------------------------------
 	//A
 	//--------------------------------------
@@ -381,11 +390,11 @@ public class MVCModelo{
 		primDistancia = new PrimMST(grafo);
 		primDistancia.edges();
 		primDistancia.weight();
-		
+
 		primTiempo = new PrimMSTtime(grafo);
 		primTiempo.edges();
 		primTiempo.weight();
-		
+
 		primVelocidad = new PrimMSTvel(grafo);
 		primVelocidad.edges();
 		primVelocidad.weight();
@@ -409,7 +418,17 @@ public class MVCModelo{
 	//9B
 	public void kruskal()
 	{
-
+		kruskalDistancia = new KruskalMST(grafo);
+		kruskalDistancia.edges();
+		kruskalDistancia.weight();
+		
+		kruskalTiempo = new KruskalMSTtime(grafo);
+		kruskalTiempo.edges();
+		kruskalTiempo.weight();
+		
+		kruskalVelocidad = new KruskalMSTvel(grafo);
+		kruskalVelocidad.edges();
+		kruskalVelocidad.weight();
 	}
 
 	//----------------------------------------
