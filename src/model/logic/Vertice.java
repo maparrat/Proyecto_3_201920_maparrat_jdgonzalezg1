@@ -1,5 +1,7 @@
 package model.logic;
 
+import model.data_structures.ArregloDinamico;
+
 public class Vertice implements Comparable<Vertice>
 {
 	private int id;
@@ -7,6 +9,8 @@ public class Vertice implements Comparable<Vertice>
 	private double longitud, latitud;
 
 	private int MOVEMENT_ID;
+	
+	private ArregloDinamico<Arco> arcos;
 
 	public Vertice(int pId, double pLongitud, double pLatitud, int pMOVEMENT_ID)
 	{
@@ -14,6 +18,7 @@ public class Vertice implements Comparable<Vertice>
 		longitud = pLongitud;
 		latitud = pLatitud;
 		MOVEMENT_ID = pMOVEMENT_ID;
+		arcos = new ArregloDinamico<>(1);
 	}
 	
 	public int compareTo(Vertice param) {
@@ -46,5 +51,15 @@ public class Vertice implements Comparable<Vertice>
 	public int darMID()
 	{
 		return MOVEMENT_ID;
+	}
+	
+	public void agregarArco(Arco param)
+	{
+		arcos.agregar(param);
+	}
+	
+	public ArregloDinamico<Arco> darArcos()
+	{
+		return arcos;
 	}
 }

@@ -381,6 +381,14 @@ public class MVCModelo{
 		primDistancia = new PrimMST(grafo);
 		primDistancia.edges();
 		primDistancia.weight();
+		
+		primTiempo = new PrimMSTtime(grafo);
+		primTiempo.edges();
+		primTiempo.weight();
+		
+		primVelocidad = new PrimMSTvel(grafo);
+		primVelocidad.edges();
+		primVelocidad.weight();
 	}
 
 	//-------------------------------------

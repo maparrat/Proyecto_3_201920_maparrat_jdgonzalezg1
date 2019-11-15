@@ -3,6 +3,11 @@ package model.data_structures;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/** 
+ * Implementación tomada de Algorithms 4th edition by Robert Sedgewick and Kevin Wayne (2011)
+ * Consultado el 15/11/19
+ * Disponible en https://algs4.cs.princeton.edu/code/
+ */
 public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer> {
 	private int maxN;        // maximum number of elements on PQ
 	private int n;           // number of elements on PQ

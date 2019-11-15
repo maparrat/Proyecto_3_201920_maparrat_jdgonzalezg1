@@ -112,7 +112,12 @@ public class Graph<K,V> implements IGraph<K, V>
 			adj[(int) idVertexIni].add((V) new Vertice((int)idVertexFin, nuevo1.darLongitud(), nuevo1.darLongitud(), nuevo1.darMID()));
 			adj[(int) idVertexFin].add((V) new Vertice((int)idVertexIni, nuevo2.darLongitud(), nuevo2.darLongitud(), nuevo2.darMID()));
 
-			arcos.agregar(new Arco((Integer)idVertexIni, (Integer)idVertexFin, costoDistancia, costoTiempo, (costoDistancia/costoTiempo)));
+			Arco nuevo = new Arco((Integer)idVertexIni, (Integer)idVertexFin, costoDistancia, costoTiempo, (costoDistancia/costoTiempo));
+			
+			arcos.agregar(nuevo);
+		
+			ini.agregarArco(nuevo);
+			fin.agregarArco(nuevo);
 		}
 	}
 

@@ -1,5 +1,10 @@
 package model.data_structures;
 
+/** 
+ * Implementación tomada de Algorithms 4th edition by Robert Sedgewick and Kevin Wayne (2011)
+ * Consultado el 15/11/19
+ * Disponible en https://algs4.cs.princeton.edu/code/
+ */
 public class UF {
 
     private int[] parent;  // parent[i] = parent of i

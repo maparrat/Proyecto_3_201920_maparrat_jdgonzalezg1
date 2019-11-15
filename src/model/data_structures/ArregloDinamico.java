@@ -155,6 +155,6 @@ public class ArregloDinamico<T extends Comparable<T>> implements Iterable<T>
 		{
 			respuesta.enqueue(elementos[i]);
 		}
-		return (Iterator<T>) respuesta;
+		return (respuesta.iterator());
 	}
 }
