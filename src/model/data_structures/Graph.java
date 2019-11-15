@@ -218,4 +218,9 @@ public class Graph<K,V> implements IGraph<K, V>
 
 		return (Iterable<K>) respuesta;	
 	}
+
+	public ArregloDinamico<Arco> edges() {
+		// TODO Auto-generated method stub
+		return arcos;
+	}
 }

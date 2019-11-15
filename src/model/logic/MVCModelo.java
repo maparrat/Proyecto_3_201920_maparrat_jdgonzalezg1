@@ -21,6 +21,9 @@ import model.data_structures.ArregloDinamico;
 import model.data_structures.Bag;
 import model.data_structures.Graph;
 import model.data_structures.Haversine;
+import model.data_structures.PrimMST;
+import model.data_structures.PrimMSTtime;
+import model.data_structures.PrimMSTvel;
 import model.data_structures.Stack;
 
 /**
@@ -35,6 +38,14 @@ public class MVCModelo{
 
 	private ArregloDinamico<UBERTrip>[] viajes;
 
+	private Haversine haver;
+	
+	private PrimMST primDistancia;
+	
+	private PrimMSTtime primTiempo;
+	
+	private PrimMSTvel primVelocidad;
+	
 	/**
 	 * Constructor del modelo del mundo
 	 */
@@ -42,6 +53,7 @@ public class MVCModelo{
 	{
 		grafo = new Graph<>(250000);
 		viajes = new ArregloDinamico[1160];
+		haver = new Haversine();
 
 		for (int v = 0; v < 1160; v++) {
 			viajes[v] = new ArregloDinamico(1);
@@ -325,10 +337,29 @@ public class MVCModelo{
 	//Parte Inicial
 	//-------------------------------------
 	//3
-	public int idMasCercano()
+	public int idMasCercano(double pLatitud, double pLongitud)
 	{
-		return 0;
+		int respuesta = -1;
+		double menorDistancia = Double.POSITIVE_INFINITY;
+		
+		for (int i = 0; i < grafo.size(); i++)
+		{
+			Vertice actual = grafo.getInfoVertex(i);
+			
+			if(actual != null)
+			{
+				double distanciaActual = haver.distance(pLatitud, pLongitud, actual.darLatitud(), actual.darLongitud());
+				if(distanciaActual < menorDistancia)
+				{
+					menorDistancia = distanciaActual;
+					respuesta = i;
+				}
+			}
+		}
+		
+		return respuesta;
 	}
+	
 	//--------------------------------------
 	//A
 	//--------------------------------------
@@ -347,7 +378,9 @@ public class MVCModelo{
 	//6A
 	public void prim()
 	{
-
+		primDistancia = new PrimMST(grafo);
+		primDistancia.edges();
+		primDistancia.weight();
 	}
 
 	//-------------------------------------
@@ -375,7 +408,7 @@ public class MVCModelo{
 	//C
 	//----------------------------------------
 	//10C
-	public void grafSimplificado()
+	public void grafoSimplificado()
 	{
 
 	}

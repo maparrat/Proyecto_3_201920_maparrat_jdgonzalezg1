@@ -70,4 +70,14 @@ public class Arco implements Comparable<Arco>
 		else 
 			return -1;
 	}
+	
+    public int either() {
+        return destino;
+    }
+
+    public int other(int vertex) {
+        if      (vertex == origen) return destino;
+        else if (vertex == destino) return origen;
+        else throw new IllegalArgumentException("Illegal endpoint");
+    }
 }

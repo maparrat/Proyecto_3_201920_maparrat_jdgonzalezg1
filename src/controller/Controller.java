@@ -98,10 +98,38 @@ public class Controller {
 
 			case 4:
 
+				double latitud;
+				double longitud;
+				try
+				{
+					System.out.println("--------- \nDar latitud a buscar: ");
+					latitud = lector.nextDouble();
+					System.out.println("--------- \nDar longitud a buscar: ");
+					longitud = lector.nextDouble();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				
+				int id = modelo.idMasCercano(latitud, longitud);
+				
+				if(id > 0)
+				{
+					System.out.println("Id del Vértice más cercano: " + id + "\n---------");
+				}
+				else
+				{
+					System.out.println("No hay vértices cargados.\n---------");
+				}
+
 				break;
 
 			case 5:
 
+				modelo.prim();
+				
 				break;
 
 			case 14: 
