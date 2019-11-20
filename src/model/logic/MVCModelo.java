@@ -19,6 +19,8 @@ import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 
 import model.data_structures.ArregloDinamico;
 import model.data_structures.Bag;
+import model.data_structures.DijkstraUndirectedSP;
+import model.data_structures.DijkstraUndirectedSPdist;
 import model.data_structures.Graph;
 import model.data_structures.Haversine;
 import model.data_structures.KruskalMST;
@@ -54,6 +56,8 @@ public class MVCModelo{
 	private KruskalMSTtime kruskalTiempo;
 	
 	private KruskalMSTvel kruskalVelocidad;
+	private DijkstraUndirectedSP dijkstra;
+	private DijkstraUndirectedSPdist dijkstraDist;
 
 	/**
 	 * Constructor del modelo del mundo
@@ -341,6 +345,11 @@ public class MVCModelo{
 	{
 		return grafo.cc();
 	}
+	
+	public Vertice darVericeSegunId(int id)
+	{
+		return grafo.getInfoVertex(id);
+	}
 
 	//-------------------------------------
 	//Parte Inicial
@@ -373,11 +382,27 @@ public class MVCModelo{
 	//A
 	//--------------------------------------
 	//4A
-	public ArregloDinamico<Double> caminodeCostoMinimoUber(double latDes,double lonDes,double latorig,double lonOrig)
+	public Stack<Arco> caminodeCostoMinimoUber(double latDes,double lonDes,double latorig,double lonOrig)
 	{
-		return null;
+		int ideOrigen = idMasCercano(latorig, lonOrig);
+		int ideDestino = idMasCercano(latDes, lonDes);
+		
+		dijkstraDist = new DijkstraUndirectedSPdist(grafo, ideOrigen);
+		
+		return (Stack<Arco>) dijkstraDist.pathTo(ideDestino);
 	}
 
+	public double darDistanciaDIJK(double latDes, double lonDest)
+	{
+		int ideDestino = idMasCercano(latDes, lonDest);
+		return dijkstraDist.distTo(ideDestino);
+	}
+	public double darTiempoDIJK(double latDes, double lonDest)
+	{
+		int ideDestino = idMasCercano(latDes, lonDest);
+		return dijkstra.distTo(ideDestino);
+	}
+	
 	//5A
 	public ArregloDinamico<Vertice> verticesMenorVel(int n)
 	{
@@ -387,17 +412,12 @@ public class MVCModelo{
 	//6A
 	public void prim()
 	{
+		
 		primDistancia = new PrimMST(grafo);
 		primDistancia.edges();
 		primDistancia.weight();
 
-		primTiempo = new PrimMSTtime(grafo);
-		primTiempo.edges();
-		primTiempo.weight();
-
-		primVelocidad = new PrimMSTvel(grafo);
-		primVelocidad.edges();
-		primVelocidad.weight();
+	
 	}
 
 	//-------------------------------------
