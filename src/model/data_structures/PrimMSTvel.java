@@ -109,7 +109,7 @@ public class PrimMSTvel
 		UF uf = new UF(G.size());
 		for (Arco e : edges()) {
 			int v = e.either(), w = e.other(v);
-			if (uf.connected(v, w)) {
+			if (uf.find(v) == uf.find(w)) {
 				System.err.println("Not a forest");
 				return false;
 			}
@@ -120,7 +120,7 @@ public class PrimMSTvel
 		for (Arco e : (Iterable<Arco>)G.edges()) 
 		{
 			int v = e.either(), w = e.other(v);
-			if (!uf.connected(v, w)) {
+			if (uf.find(v) != uf.find(w)) {
 				System.err.println("Not a spanning forest");
 				return false;
 			}
@@ -139,7 +139,7 @@ public class PrimMSTvel
 			// check that e is min weight edge in crossing cut
 			for (Arco f : (Iterable<Arco>)G.edges()) {
 				int x = f.either(), y = f.other(x);
-				if (!uf.connected(x, y)) {
+				if (uf.find(x) != uf.find(y)) {
 					if (f.darCostoVelocidad() < e.darCostoVelocidad()) {
 						System.err.println("Edge " + f + " violates cut optimality conditions");
 						return false;

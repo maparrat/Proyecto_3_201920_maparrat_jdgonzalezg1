@@ -20,7 +20,7 @@ public class KruskalMSTvel {
 	public KruskalMSTvel(Graph G) {
 		// more efficient to build heap by passing array of edges
 		MinPQ<Arco> pq = new MinPQ<Arco>();
-		for (Arco e : (ArregloDinamico<Arco>)G.arcos) {
+		for (Arco e : (Iterable<Arco>)G.edges()) {
 			pq.insert(e);
 		}
 
@@ -30,7 +30,7 @@ public class KruskalMSTvel {
 			Arco e = pq.delMin();
 			int v = e.either();
 			int w = e.other(v);
-			if (!uf.connected(v, w)) { // v-w does not create a cycle
+			if (uf.find(v) != uf.find(w)) { // v-w does not create a cycle
 				uf.union(v, w);  // merge v and w components
 				mst.enqueue(e);  // add edge e to mst
 				weight += e.darCostoVelocidad();
@@ -75,7 +75,7 @@ public class KruskalMSTvel {
 		UF uf = new UF(G.size());
 		for (Arco e : edges()) {
 			int v = e.either(), w = e.other(v);
-			if (uf.connected(v, w)) {
+			if (uf.find(v) == uf.find(w)) {
 				System.err.println("Not a forest");
 				return false;
 			}
@@ -85,7 +85,7 @@ public class KruskalMSTvel {
 		// check that it is a spanning forest
 		for (Arco e : (Iterable<Arco>)G.edges()) {
 			int v = e.either(), w = e.other(v);
-			if (!uf.connected(v, w)) {
+			if (uf.find(v) != uf.find(w)) {
 				System.err.println("Not a spanning forest");
 				return false;
 			}
@@ -104,7 +104,7 @@ public class KruskalMSTvel {
 			// check that e is min weight edge in crossing cut
 			for (Arco f : (Iterable<Arco>)G.edges()) {
 				int x = f.either(), y = f.other(x);
-				if (!uf.connected(x, y)) {
+				if (uf.find(x) != uf.find(y)) {
 					if (f.darCostoVelocidad() < e.darCostoVelocidad()) {
 						System.err.println("Edge " + f + " violates cut optimality conditions");
 						return false;

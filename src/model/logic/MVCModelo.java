@@ -382,24 +382,29 @@ public class MVCModelo{
 	//A
 	//--------------------------------------
 	//4A
-	public Stack<Arco> caminodeCostoMinimoUber(double latDes,double lonDes,double latorig,double lonOrig)
+	public Stack<Arco> caminodeCostoMinimoUber(double latOrig, double longOrig, double latDest, double longDest)
 	{
-		int ideOrigen = idMasCercano(latorig, lonOrig);
-		int ideDestino = idMasCercano(latDes, lonDes);
+		int ideOrigen = idMasCercano(latOrig, longOrig);
+		int ideDestino = idMasCercano(latDest, longDest);
 		
 		dijkstraDist = new DijkstraUndirectedSPdist(grafo, ideOrigen);
 		
 		return (Stack<Arco>) dijkstraDist.pathTo(ideDestino);
 	}
 
-	public double darDistanciaDIJK(double latDes, double lonDest)
+	public double darDistanciaDIJK(double latDes, double longDest)
 	{
-		int ideDestino = idMasCercano(latDes, lonDest);
+		int ideDestino = idMasCercano(latDes, longDest);
 		return dijkstraDist.distTo(ideDestino);
 	}
-	public double darTiempoDIJK(double latDes, double lonDest)
+	
+	public double darTiempoDIJK(double latOrig, double longOrig, double latDest, double longDest)
 	{
-		int ideDestino = idMasCercano(latDes, lonDest);
+		int ideOrigen = idMasCercano(latOrig, longOrig);
+		int ideDestino = idMasCercano(latDest, longDest);
+		
+		dijkstra = new DijkstraUndirectedSP(grafo, ideOrigen);
+		
 		return dijkstra.distTo(ideDestino);
 	}
 	

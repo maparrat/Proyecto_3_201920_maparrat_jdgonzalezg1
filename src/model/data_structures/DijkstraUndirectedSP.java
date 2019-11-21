@@ -3,6 +3,11 @@ package model.data_structures;
 import model.logic.Arco;
 import model.logic.Vertice;
 
+/** 
+ * Implementación tomada de Algorithms 4th edition by Robert Sedgewick and Kevin Wayne (2011)
+ * Consultado el 20/11/19
+ * Disponible en https://algs4.cs.princeton.edu/code/
+ */
 public class DijkstraUndirectedSP {
     private double[] distTo;          // distTo[v] = distance  of shortest s->v path
     private Arco[] edgeTo;            // edgeTo[v] = last edge on shortest s->v path
@@ -136,7 +141,7 @@ public class DijkstraUndirectedSP {
 
         // check that all edges e = v-w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.size(); v++) {
-            for (Arco e : ((Vertice) G.getInfoVertex(s)).darArcos()) {
+            for (Arco e : ((Vertice) G.getInfoVertex(v)).darArcos()) {
                 int w = e.other(v);
                 if (distTo[v] + e.darCostoTiempo() < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");

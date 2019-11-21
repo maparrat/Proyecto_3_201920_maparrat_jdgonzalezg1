@@ -152,34 +152,34 @@ public class Controller {
 					break;
 				}
 
-				Stack<Arco> camino = modelo.caminodeCostoMinimoUber(alatitudD, alongitudD, alatitudO, alongitudO);
+				Stack<Arco> camino = modelo.caminodeCostoMinimoUber(alatitudO, alongitudO, alatitudD, alongitudD);
 				
 				if(camino == null)
 				{
-					System.out.println("No hay un camino entre estos vertices");
+					System.out.println("---------\nNo hay uningun camino entre estos vertices\n---------");
 					break;
 				}
 				else
 				{
-					System.out.println("El total de vertices a recorrer es " + camino.size());
+					System.out.println("---------\nEl total de vertices a recorrer es: " + (camino.size() + 1) + "\n");
 					
 					Arco actual = camino.pop();
 					Vertice origenPrimero = modelo.darVericeSegunId(actual.darOrigen());
-					System.out.println("La información del vértice #"+ 1 + " es: ID" + origenPrimero.darId() +" , Latitud:"+ origenPrimero.darLatitud() +" , Longitud:"+origenPrimero.darLongitud());
+					System.out.println("La información del vértice #" + 1 + " es:\nID: " + origenPrimero.darId() + "\nLatitud: " + origenPrimero.darLatitud() + "\nLongitud: " + origenPrimero.darLongitud() + "\n---------");
 					Vertice destinoPrimero = modelo.darVericeSegunId(actual.darDest());
-					System.out.println("La información del vértice #"+ 2 + " es: ID" + destinoPrimero.darId() +" , Latitud:"+ destinoPrimero.darLatitud() +" , Longitud:"+destinoPrimero.darLongitud());
+					System.out.println("La información del vértice #" + 2 + " es:\nID: " + destinoPrimero.darId() + "\nLatitud: " + destinoPrimero.darLatitud() + "\nLongitud: " + destinoPrimero.darLongitud() + "\n---------");
 					
 					int i = 3;
 					while(camino.size() > 0)
 					{
 						actual = camino.pop();
 						Vertice destino = modelo.darVericeSegunId(actual.darDest());
-						System.out.println("La información del vértice #"+ i + " es: ID" + destino.darId() +" , Latitud:"+ destino.darLatitud() +" , Longitud:"+destino.darLongitud());
+						System.out.println("La información del vértice #" + i + " es:\nID:" + destino.darId() + "\nLatitud: " + destino.darLatitud() + "\nLongitud: " + destino.darLongitud() + "\n---------");
 						i++;
 					}
 					
-					System.out.println("El tiempo de viaje entre los vértices es: "+ modelo.darTiempoDIJK(alatitudD, alongitudD));
-					System.out.println("La distancia de viaje entre los vértices es: "+ modelo.darDistanciaDIJK(alatitudD, alongitudD));
+					System.out.println("El tiempo de viaje entre los vértices es: " + modelo.darTiempoDIJK(alatitudO, alongitudO, alatitudD, alongitudD) + " segundos");
+					System.out.println("La distancia de viaje entre los vértices es: " + modelo.darDistanciaDIJK(alatitudD, alongitudD) + " kilómetros\n---------");
 					
 					break;
 				}
