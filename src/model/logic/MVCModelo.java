@@ -1,6 +1,7 @@
 package model.logic;
 
 import java.io.BufferedReader;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +18,7 @@ import org.json.simple.parser.JSONParser;
 import com.opencsv.CSVReader;
 import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
 
+import javafx.geometry.VerticalDirection;
 import model.data_structures.ArregloDinamico;
 import model.data_structures.Bag;
 import model.data_structures.DijkstraUndirectedSP;
@@ -26,9 +28,11 @@ import model.data_structures.Haversine;
 import model.data_structures.KruskalMST;
 import model.data_structures.KruskalMSTtime;
 import model.data_structures.KruskalMSTvel;
+
 import model.data_structures.PrimMST;
 import model.data_structures.PrimMSTtime;
 import model.data_structures.PrimMSTvel;
+import model.data_structures.Queue;
 import model.data_structures.Stack;
 
 /**
@@ -52,9 +56,9 @@ public class MVCModelo{
 	private PrimMSTvel primVelocidad;
 
 	private KruskalMST kruskalDistancia;
-	
+
 	private KruskalMSTtime kruskalTiempo;
-	
+
 	private KruskalMSTvel kruskalVelocidad;
 	private DijkstraUndirectedSP dijkstra;
 	private DijkstraUndirectedSPdist dijkstraDist;
@@ -340,12 +344,61 @@ public class MVCModelo{
 		bf.close();
 		pf.close();
 	}
+	public void crearMapa(Graph pgrafo, String punto) throws Exception 
+	{
+		FileReader reader = new FileReader(new File("datai/index.txt"));
+		BufferedReader bf = new BufferedReader(reader);
 
+		BufferedWriter pf = new BufferedWriter(new PrintWriter(new File("datai/mapa"+punto+".txt")));
+
+		boolean llego = false;
+		while(llego == false)
+		{
+			String lineaActual = bf.readLine();
+			pf.write(lineaActual + "\n");
+
+			if(lineaActual.equals("//kiwi"))
+			{
+				llego = true;
+
+			}
+		}		
+
+		for (int i = 0; i < pgrafo.arcos.darTamano(); i++)
+		{
+			Arco actual = (Arco) pgrafo.arcos.darElemento(i);
+
+			Vertice vertice1 = (Vertice) pgrafo.getInfoVertex(actual.darOrigen());
+			Vertice vertice2 = (Vertice) pgrafo.getInfoVertex(actual.darDest());
+
+			if(vertice1.darLatitud() < 4.621360 && vertice1.darLatitud() > 4.597714 && vertice1.darLongitud() < -74.062707 && vertice1.darLongitud() > -74.094723 && vertice2.darLatitud() < 4.621360 && vertice2.darLatitud() > 4.597714 && vertice2.darLongitud() < -74.062707 && vertice2.darLongitud() > -74.094723)
+			{
+				pf.write("line = [{lat: " + vertice1.darLatitud() + ", lng: " + vertice1.darLongitud() + "},{lat: " + vertice2.darLatitud() + ", lng: " + vertice2.darLongitud() + "}];\n");
+				pf.write("path = new google.maps.Polyline({path: line, strokeColor: '#FF0000', strokeWeight: 2});\n");
+				pf.write("path.setMap(map);\n");
+			}
+		}
+
+		boolean acabo = false;
+		while(acabo == false)
+		{
+			String lineaActual = bf.readLine();
+			pf.write(lineaActual + "\n");
+
+			if(lineaActual.equals("//acabe"))
+			{
+				acabo = true;
+			}
+		}
+
+		bf.close();
+		pf.close();
+	}
 	public int darCantidadCC()
 	{
 		return grafo.cc();
 	}
-	
+
 	public Vertice darVericeSegunId(int id)
 	{
 		return grafo.getInfoVertex(id);
@@ -386,10 +439,28 @@ public class MVCModelo{
 	{
 		int ideOrigen = idMasCercano(latOrig, longOrig);
 		int ideDestino = idMasCercano(latDest, longDest);
-		
+
 		dijkstraDist = new DijkstraUndirectedSPdist(grafo, ideOrigen);
-		
+		Graph <Integer, Vertice>pgrafo = new  Graph<>(100000);
+		//Parte de graficar
+		Stack<Arco> arcos = (Stack<Arco>) dijkstraDist.pathTo(ideDestino);
+		while(arcos.isEmpty() == false)
+		{
+			Arco actual = arcos.pop();
+			Vertice vactualorig = grafo.getInfoVertex(actual.darOrigen());
+			Vertice vactualdes = grafo.getInfoVertex(actual.darDest());
+			pgrafo.addVertex(vactualorig.darId(), vactualorig);
+			pgrafo.addVertex(vactualdes.darId(), vactualdes);
+			pgrafo.addEdge(actual.darOrigen(), actual.darDest(), actual.darCostoDistancia());
+		}
+		try {
+			crearMapa(pgrafo, "4A");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return (Stack<Arco>) dijkstraDist.pathTo(ideDestino);
+
 	}
 
 	public double darDistanciaDIJK(double latDes, double longDest)
@@ -397,32 +468,95 @@ public class MVCModelo{
 		int ideDestino = idMasCercano(latDes, longDest);
 		return dijkstraDist.distTo(ideDestino);
 	}
-	
+
 	public double darTiempoDIJK(double latOrig, double longOrig, double latDest, double longDest)
 	{
 		int ideOrigen = idMasCercano(latOrig, longOrig);
 		int ideDestino = idMasCercano(latDest, longDest);
-		
+
 		dijkstra = new DijkstraUndirectedSP(grafo, ideOrigen);
-		
+
 		return dijkstra.distTo(ideDestino);
 	}
-	
+
 	//5A
 	public ArregloDinamico<Vertice> verticesMenorVel(int n)
 	{
-		return null;
+		Vertice[] ordenar = new Vertice[grafo.V()];
+		int actualA = 0;
+		for(int i = 0; i< grafo.size(); i++)
+		{
+			if(grafo.getInfoVertex(i) != null)
+			{
+				ordenar[actualA]= grafo.getInfoVertex(i);
+				actualA++;
+			}
+		}
+
+		//ordenamiento
+		for (int i=1; i < ordenar.length; i++) {
+			Vertice aux = ordenar[i];
+			int j;
+			for (j=i-1; j >=0 && ordenar[j].velocidadPromedio() > aux.velocidadPromedio(); j--)
+			{
+				ordenar[j+1] = ordenar[j];
+			}
+			ordenar[j+1] = aux;
+		}
+		ArregloDinamico<Vertice> respuesta = new ArregloDinamico<>(1);
+		Graph< Integer, Vertice> pgrafo = new Graph<>(100000);
+		for(int i= 0; i < n; i++)
+		{
+			//graficar
+
+			pgrafo.addVertex(ordenar[i].darId(), ordenar[i]);
+			ArregloDinamico<Arco> actual  = ordenar[i].darArcos();
+			for(int j = 0 ; j<actual.darTamano(); j++)
+			{
+				Vertice verticeActual = grafo.getInfoVertex(actual.darElemento(j).darDest());
+				pgrafo.addVertex(actual.darElemento(j).darDest(), verticeActual);
+				pgrafo.addEdge(ordenar[i].darId(), actual.darElemento(j).darDest(), actual.darElemento(j).darCostoDistancia());
+			}
+			respuesta.agregar(ordenar[i]);
+		}
+		try {
+			crearMapa(pgrafo, "5A");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return respuesta ;
 	}
 
 	//6A
-	public void prim()
+	public Graph prim()
 	{
-		
 		primDistancia = new PrimMST(grafo);
-		primDistancia.edges();
-		primDistancia.weight();
+		Queue<Arco> arcosNuevo = (Queue<Arco>) primDistancia.edges();
 
-	
+		Graph<Integer, Vertice> nuevo = new Graph<>(250000);
+
+		for(int i= 0; i < grafo.size(); i++)
+		{
+			Vertice actual = grafo.getInfoVertex(i);
+			if(actual != null)
+			{
+				nuevo.addVertex(i, actual);
+			}	
+		}
+
+		while(!arcosNuevo.isEmpty())
+		{
+			Arco actual = arcosNuevo.dequeue();
+			nuevo.addEdge(actual.darOrigen(), actual.darDest(), actual.darCostoDistancia());
+		}
+		try {
+			crearMapa(nuevo, "6A");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return nuevo;
 	}
 
 	//-------------------------------------
@@ -446,11 +580,11 @@ public class MVCModelo{
 		kruskalDistancia = new KruskalMST(grafo);
 		kruskalDistancia.edges();
 		kruskalDistancia.weight();
-		
+
 		kruskalTiempo = new KruskalMSTtime(grafo);
 		kruskalTiempo.edges();
 		kruskalTiempo.weight();
-		
+
 		kruskalVelocidad = new KruskalMSTvel(grafo);
 		kruskalVelocidad.edges();
 		kruskalVelocidad.weight();
