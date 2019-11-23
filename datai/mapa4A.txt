@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <title>Simple Polylines</title>
+  <style>
+    /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+    #map {
+      height: 100%;
+    }
+    /* Optional: Makes the sample page fill the window. */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+    // Basado en el codigo de: https://developers-dot-devsite-v2-prod.appspot.com/maps/documentation/javascript/examples/polyline-simple
+    function initMap() {
+      // Poner el centro del mapa
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 5,
+        center: {
+          lat: 4.5,
+          lng: -74
+        },
+        mapTypeId: 'roadmap'
+      });
+      var line;
+      var path;
+      // Puede ser util revisar:
+      // https://developers-dot-devsite-v2-prod.appspot.com/maps/documentation/javascript/reference/polygon#PolylineOptions
+      // y https://developers-dot-devsite-v2-prod.appspot.com/maps/documentation/javascript/reference/marker
+      //--------------------------
+      //Parte para modificar
+      //--------------------------
+//kiwi
+line = [{lat: 4.595767844000024, lng: -74.16668805299997},{lat: 4.595796397000015, lng: -74.16690934299999}];
+path = new google.maps.Polyline({path: line, strokeColor: '#FF0000', strokeWeight: 2});
+path.setMap(map);
+line = [{lat: 4.595796397000015, lng: -74.16690934299999},{lat: 4.595806340000023, lng: -74.16726877000002}];
+path = new google.maps.Polyline({path: line, strokeColor: '#FF0000', strokeWeight: 2});
+path.setMap(map);
+
+      //--------------------------
+      //Parte para modificar
+      //--------------------------
+    }
+    //Google maps puede usar una llave, pero requiere ingresar una tarjeta de credito
+    // Mirar https://developers.google.com/maps/documentation/javascript/get-api-key
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap">
+  </script>
+</body>
+
+</html>
+//acabe

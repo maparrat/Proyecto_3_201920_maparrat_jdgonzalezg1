@@ -11,7 +11,9 @@ public class Vertice implements Comparable<Vertice>
 
 	private int MOVEMENT_ID;
 
-	private ArregloDinamico<Arco> arcos;
+	public ArregloDinamico<Arco> arcos;
+	
+	public double velProm;
 
 	public Vertice(int pId, double pLongitud, double pLatitud, int pMOVEMENT_ID)
 	{
@@ -67,14 +69,13 @@ public class Vertice implements Comparable<Vertice>
 	{
 		double x = 0;
 		double suma = 0;
-		if (arcos != null)
+		if (arcos.darTamano() > 0)
 		{
-			ArregloDinamico<Arco> copia = arcos; 
-			for(int i = 0; i < copia.darTamano(); i++)
+			for(int i = 0; i < arcos.darTamano(); i++)
 			{
-				suma = suma +copia.darElemento(i).darCostoVelocidad();
+				suma += arcos.darElemento(i).darCostoVelocidad();
 			}
-			x = suma/ copia.darTamano();
+			x = suma/arcos.darTamano();
 			return x;
 
 		}

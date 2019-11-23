@@ -121,7 +121,7 @@ public class Controller {
 
 				int id = modelo.idMasCercano(latitud, longitud);
 
-				if(id > 0)
+				if(id >= 0)
 				{
 					System.out.println("Id del Vértice más cercano: " + id + "\n---------");
 				}
@@ -186,27 +186,30 @@ public class Controller {
 
 					break;
 				}
+				
 			case 6:
 				int numero ; 
 				try
 				{
-					System.out.println("--------- \nDar cantidad de vertioces a retornar: ");
+					System.out.println("--------- \nDar cantidad de vertices a retornar: ");
 					numero = (int) lector.nextDouble();
-
 				}
 				catch(InputMismatchException e)
 				{
 					System.out.println("Debe ingresar un valor numérico\n---------");
 					break;
 				}
+				
 				ArregloDinamico<Vertice> menores = modelo.verticesMenorVel(numero);
-				for(int i  =0 ; i< menores.darTamano(); i++)
+				
+				for(int i = 0 ; i < menores.darTamano(); i++)
 				{
 					Vertice actual = menores.darElemento(i);
-					System.out.println("La información del vértice #" + i +"\n---------");
-					System.out.println("ID"+actual.darId());
-					System.out.println("Su latitud"+actual.darLatitud());
-					System.out.println("Su longitud"+actual.darLongitud());
+					System.out.println("La información del vértice #" + (i+1) + " es:");
+					System.out.println("ID: " + actual.darId());
+					System.out.println("Latitud: " + actual.darLatitud());
+					System.out.println("Longitud: " + actual.darLongitud());
+					System.out.println("Velocidad promedio: " + actual.velProm + "\n---------");
 				}
 
 				break;
@@ -220,7 +223,7 @@ public class Controller {
 				long endTime = System.currentTimeMillis(); // Medición tiempo actual
 				long duration = endTime - startTime; // Duracion de ejecucion del algoritmo
 
-				int costoTotal = 0;
+				double costoTotal = 0;
 				for(int i = 1; i <= prim.arcos.darTamano(); i++)
 				{
 					Arco actual = prim.arcos.darElemento(i);
@@ -231,12 +234,12 @@ public class Controller {
 						costoTotal += actual.darCostoDistancia();
 					}
 				}
-
-				System.out.println("La duración del algoritmo fue: " +  (duration/1000) + " segundos");
+				
+				System.out.println("---------\nLa duración del algoritmo fue: " + duration + " milisegundos");
 
 				System.out.println("El número de vértices del grafo es: " + prim.V());
 
-				System.out.println("El costo total del grafo es: " + costoTotal);
+				System.out.println("El costo total del grafo es: " + costoTotal + " kilómetros\n---------");
 
 				break;
 
