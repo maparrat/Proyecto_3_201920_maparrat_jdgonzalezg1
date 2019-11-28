@@ -242,6 +242,35 @@ public class Controller {
 				System.out.println("El costo total del grafo es: " + costoTotal + " kilómetros\n---------");
 
 				break;
+				
+			case 10:
+				
+				long startTime2 = System.currentTimeMillis(); // Medición tiempo actual
+
+				Graph<Integer, Vertice> kruskal = modelo.kruskal();
+
+				long endTime2 = System.currentTimeMillis(); // Medición tiempo actual
+				long duration2 = endTime2 - startTime2; // Duracion de ejecucion del algoritmo
+
+				double costoTotal2 = 0;
+				for(int i = 1; i <= kruskal.arcos.darTamano(); i++)
+				{
+					Arco actual = kruskal.arcos.darElemento(i);
+
+					if(actual != null)
+					{
+						System.out.println("El arco #" + i + " va entre los vértices " + actual.darOrigen() + " y " + actual.darDest());
+						costoTotal2 += actual.darCostoDistancia();
+					}
+				}
+				
+				System.out.println("---------\nLa duración del algoritmo fue: " + duration2 + " milisegundos");
+
+				System.out.println("El número de vértices del grafo es: " + kruskal.V());
+
+				System.out.println("El costo total del grafo es: " + costoTotal2 + " kilómetros\n---------");
+				
+				break;
 
 			case 14: 
 				System.out.println("--------- \n Hasta pronto !! \n---------"); 

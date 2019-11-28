@@ -608,19 +608,34 @@ public class MVCModelo{
 	}
 
 	//9B
-	public void kruskal()
+	public Graph kruskal()
 	{
 		kruskalDistancia = new KruskalMST(grafo);
-		kruskalDistancia.edges();
-		kruskalDistancia.weight();
+		Queue<Arco> arcosNuevo = (Queue<Arco>) kruskalDistancia.edges();
 
-		kruskalTiempo = new KruskalMSTtime(grafo);
-		kruskalTiempo.edges();
-		kruskalTiempo.weight();
+		Graph<Integer, Vertice> nuevo = new Graph<>(250000);
 
-		kruskalVelocidad = new KruskalMSTvel(grafo);
-		kruskalVelocidad.edges();
-		kruskalVelocidad.weight();
+		for(int i= 0; i < grafo.size(); i++)
+		{
+			Vertice actual = grafo.getInfoVertex(i);
+			if(actual != null)
+			{
+				nuevo.addVertex(i, actual);
+			}	
+		}
+
+		while(!arcosNuevo.isEmpty())
+		{
+			Arco actual = arcosNuevo.dequeue();
+			nuevo.addEdge(actual.darOrigen(), actual.darDest(), actual.darCostoDistancia());
+		}
+		try {
+			crearMapa(nuevo, "9B");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return nuevo;
 	}
 
 	//----------------------------------------
