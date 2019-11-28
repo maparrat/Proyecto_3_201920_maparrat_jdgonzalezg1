@@ -95,7 +95,7 @@ public class KruskalMST {
 		for (Arco e : edges()) {
 
 			// all edges in MST except e
-			uf = new UF(G.V());
+			uf = new UF(G.size());
 			for (Arco f : mst) {
 				int x = f.either(), y = f.other(x);
 				if (f != e) uf.union(x, y);
