@@ -443,7 +443,7 @@ public class MVCModelo{
 		int ideDestino = idMasCercano(latDest, longDest);
 
 		dijkstra = new DijkstraUndirectedSP(grafo, ideOrigen);
-		Graph <Integer, Vertice> pgrafo = new  Graph<>(100000);
+		Graph<Integer, Vertice> pgrafo = new Graph<>(250000);
 
 		//Parte de graficar
 		Stack<Arco> arcos = (Stack<Arco>) dijkstra.pathTo(ideDestino);
@@ -606,7 +606,7 @@ public class MVCModelo{
 		int ideDestino = idMasCercano(latDest, longDest);
 
 		dijkstraDist = new DijkstraUndirectedSPdist(grafo, ideOrigen);
-		Graph <Integer, Vertice> pgrafo = new  Graph<>(100000);
+		Graph<Integer, Vertice> pgrafo = new Graph<>(250000);
 
 		//Parte de graficar
 		Stack<Arco> arcos = (Stack<Arco>) dijkstraDist.pathTo(ideDestino);
@@ -623,7 +623,7 @@ public class MVCModelo{
 			pgrafo.addEdge(actual.darOrigen(), actual.darDest(), actual.darCostoDistancia());
 		}
 		try {
-			crearMapa(pgrafo, "4A");
+			crearMapa(pgrafo, "7B");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
