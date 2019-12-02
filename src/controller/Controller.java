@@ -182,12 +182,13 @@ public class Controller {
 					}
 
 					System.out.println("El tiempo de viaje entre los vértices es: " + modelo.darTiempoDIJK(alatitudO, alongitudO, alatitudD, alongitudD) + " segundos");
-					System.out.println("La distancia de viaje entre los vértices es: " + modelo.darDistanciaDIJK(alatitudD, alongitudD) + " kilómetros\n---------");
+					System.out.println("La distancia de viaje entre los vértices es: " + modelo.darDistanciaDIJK(alatitudO, alongitudO, alatitudD, alongitudD) + " kilómetros\n---------");
 
 					break;
 				}
-				
+
 			case 6:
+
 				int numero ; 
 				try
 				{
@@ -234,7 +235,7 @@ public class Controller {
 						costoTotal += actual.darCostoDistancia();
 					}
 				}
-				
+
 				System.out.println("---------\nLa duración del algoritmo fue: " + duration + " milisegundos");
 
 				System.out.println("El número de vértices del grafo es: " + prim.V());
@@ -242,9 +243,65 @@ public class Controller {
 				System.out.println("El costo total del grafo es: " + costoTotal + " kilómetros\n---------");
 
 				break;
+
+			case 8:
+
+				double blatitudO;
+				double blongitudO;
+				double blatitudD;
+				double blongitudD;
+				try
+				{
+					System.out.println("--------- \nDar latitud de origen a buscar: ");
+					blatitudO = lector.nextDouble();
+					System.out.println("--------- \nDar longitud de origen a buscar: ");
+					blongitudO = lector.nextDouble();
+					System.out.println("--------- \nDar latitud de destino a buscar: ");
+					blatitudD = lector.nextDouble();
+					System.out.println("--------- \nDar longitud de destino a buscar: ");
+					blongitudD = lector.nextDouble();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+
+				Stack<Arco> caminob = modelo.costoMinimoHarversine(blatitudO, blongitudO, blatitudD, blongitudD);
+
+				if(caminob == null)
+				{
+					System.out.println("---------\nNo hay uningun camino entre estos vertices\n---------");
+					break;
+				}
+				else
+				{
+					System.out.println("---------\nEl total de vertices a recorrer es: " + (caminob.size() + 1) + "\n");
+
+					Arco actual = caminob.pop();
+					Vertice origenPrimero = modelo.darVericeSegunId(actual.darOrigen());
+					System.out.println("La información del vértice #" + 1 + " es:\nID: " + origenPrimero.darId() + "\nLatitud: " + origenPrimero.darLatitud() + "\nLongitud: " + origenPrimero.darLongitud() + "\n---------");
+					Vertice destinoPrimero = modelo.darVericeSegunId(actual.darDest());
+					System.out.println("La información del vértice #" + 2 + " es:\nID: " + destinoPrimero.darId() + "\nLatitud: " + destinoPrimero.darLatitud() + "\nLongitud: " + destinoPrimero.darLongitud() + "\n---------");
+
+					int i = 3;
+					while(caminob.size() > 0)
+					{
+						actual = caminob.pop();
+						Vertice destino = modelo.darVericeSegunId(actual.darDest());
+						System.out.println("La información del vértice #" + i + " es:\nID:" + destino.darId() + "\nLatitud: " + destino.darLatitud() + "\nLongitud: " + destino.darLongitud() + "\n---------");
+						i++;
+					}
+
+					System.out.println("El tiempo de viaje entre los vértices es: " + modelo.darTiempoDIJK(blatitudO, blongitudO, blatitudD, blongitudD) + " segundos");
+					System.out.println("La distancia de viaje entre los vértices es: " + modelo.darDistanciaDIJK(blatitudO, blongitudO, blatitudD, blongitudD) + " kilómetros\n---------");
+
+				}
 				
+				break;
+
 			case 10:
-				
+
 				long startTime2 = System.currentTimeMillis(); // Medición tiempo actual
 
 				Graph<Integer, Vertice> kruskal = modelo.kruskal();
@@ -263,13 +320,13 @@ public class Controller {
 						costoTotal2 += actual.darCostoDistancia();
 					}
 				}
-				
+
 				System.out.println("---------\nLa duración del algoritmo fue: " + duration2 + " milisegundos");
 
 				System.out.println("El número de vértices del grafo es: " + kruskal.V());
 
 				System.out.println("El costo total del grafo es: " + costoTotal2 + " kilómetros\n---------");
-				
+
 				break;
 
 			case 14: 

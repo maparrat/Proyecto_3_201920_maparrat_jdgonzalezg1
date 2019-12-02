@@ -22,9 +22,8 @@ public class DijkstraUndirectedSP {
      * @throws IllegalArgumentException if an edge weight is negative
      * @throws IllegalArgumentException unless {@code 0 <= s < V}
      */
-    public DijkstraUndirectedSP(Graph G, int s) {
- 
-    	
+    public DijkstraUndirectedSP(Graph G, int s)
+    {
 		for (Arco e : (Iterable<Arco>)G.edges())
 		{
             if (e.darCostoTiempo() < 0)
@@ -170,7 +169,4 @@ public class DijkstraUndirectedSP {
         if (v < 0 || v >= V)
             throw new IllegalArgumentException("vertex " + v + " is not between 0 and " + (V-1));
     }
-
-   
-
 }

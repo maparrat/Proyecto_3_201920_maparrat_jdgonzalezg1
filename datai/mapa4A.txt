@@ -44,12 +44,6 @@
       //Parte para modificar
       //--------------------------
 //kiwi
-line = [{lat: 4.595767844000024, lng: -74.16668805299997},{lat: 4.595796397000015, lng: -74.16690934299999}];
-path = new google.maps.Polyline({path: line, strokeColor: '#FF0000', strokeWeight: 2});
-path.setMap(map);
-line = [{lat: 4.595796397000015, lng: -74.16690934299999},{lat: 4.595806340000023, lng: -74.16726877000002}];
-path = new google.maps.Polyline({path: line, strokeColor: '#FF0000', strokeWeight: 2});
-path.setMap(map);
 
       //--------------------------
       //Parte para modificar

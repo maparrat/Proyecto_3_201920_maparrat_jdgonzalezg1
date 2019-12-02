@@ -442,12 +442,12 @@ public class MVCModelo{
 		int ideOrigen = idMasCercano(latOrig, longOrig);
 		int ideDestino = idMasCercano(latDest, longDest);
 
-		dijkstraDist = new DijkstraUndirectedSPdist(grafo, ideOrigen);
+		dijkstra = new DijkstraUndirectedSP(grafo, ideOrigen);
 		Graph <Integer, Vertice> pgrafo = new  Graph<>(100000);
 
 		//Parte de graficar
-		Stack<Arco> arcos = (Stack<Arco>) dijkstraDist.pathTo(ideDestino);
-		while(!arcos.isEmpty())
+		Stack<Arco> arcos = (Stack<Arco>) dijkstra.pathTo(ideDestino);
+		while(arcos != null && !arcos.isEmpty())
 		{
 			Arco actual = arcos.pop();
 
@@ -465,12 +465,16 @@ public class MVCModelo{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return (Stack<Arco>) dijkstraDist.pathTo(ideDestino);
+		return (Stack<Arco>) dijkstra.pathTo(ideDestino);
 	}
 
-	public double darDistanciaDIJK(double latDes, double longDest)
+	public double darDistanciaDIJK(double latOrig, double longOrig, double latDest, double longDest)
 	{
-		int ideDestino = idMasCercano(latDes, longDest);
+		int ideOrigen = idMasCercano(latOrig, longOrig);
+		int ideDestino = idMasCercano(latDest, longDest);
+
+		dijkstraDist = new DijkstraUndirectedSPdist(grafo, ideOrigen);
+
 		return dijkstraDist.distTo(ideDestino);
 	}
 
@@ -596,9 +600,35 @@ public class MVCModelo{
 	//B
 	//-------------------------------------
 	//7B
-	public ArregloDinamico<Double> costoMinimoHarversine(double latDes,double lonDes,double latorig,double lonOrig)
+	public Stack<Arco> costoMinimoHarversine(double latOrig, double longOrig, double latDest, double longDest)
 	{
-		return null;
+		int ideOrigen = idMasCercano(latOrig, longOrig);
+		int ideDestino = idMasCercano(latDest, longDest);
+
+		dijkstraDist = new DijkstraUndirectedSPdist(grafo, ideOrigen);
+		Graph <Integer, Vertice> pgrafo = new  Graph<>(100000);
+
+		//Parte de graficar
+		Stack<Arco> arcos = (Stack<Arco>) dijkstraDist.pathTo(ideDestino);
+		while(arcos != null && !arcos.isEmpty())
+		{
+			Arco actual = arcos.pop();
+
+			Vertice vactualorig = grafo.getInfoVertex(actual.darOrigen());
+			Vertice vactualdes = grafo.getInfoVertex(actual.darDest());
+
+			pgrafo.addVertex(vactualorig.darId(), vactualorig);
+			pgrafo.addVertex(vactualdes.darId(), vactualdes);
+
+			pgrafo.addEdge(actual.darOrigen(), actual.darDest(), actual.darCostoDistancia());
+		}
+		try {
+			crearMapa(pgrafo, "4A");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return (Stack<Arco>) dijkstraDist.pathTo(ideDestino);
 	}
 
 	//8B
