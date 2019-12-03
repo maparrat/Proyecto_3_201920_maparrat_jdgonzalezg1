@@ -361,7 +361,6 @@ public class MVCModelo{
 			if(lineaActual.equals("//kiwi"))
 			{
 				llego = true;
-
 			}
 		}		
 
@@ -372,12 +371,9 @@ public class MVCModelo{
 			Vertice vertice1 = (Vertice) pGrafo.getInfoVertex(actual.darOrigen());
 			Vertice vertice2 = (Vertice) pGrafo.getInfoVertex(actual.darDest());
 
-			if(vertice1.darLatitud() < 4.621360 && vertice1.darLatitud() > 4.597714 && vertice1.darLongitud() < -74.062707 && vertice1.darLongitud() > -74.094723 && vertice2.darLatitud() < 4.621360 && vertice2.darLatitud() > 4.597714 && vertice2.darLongitud() < -74.062707 && vertice2.darLongitud() > -74.094723)
-			{
-				pf.write("line = [{lat: " + vertice1.darLatitud() + ", lng: " + vertice1.darLongitud() + "},{lat: " + vertice2.darLatitud() + ", lng: " + vertice2.darLongitud() + "}];\n");
-				pf.write("path = new google.maps.Polyline({path: line, strokeColor: '#FF0000', strokeWeight: 2});\n");
-				pf.write("path.setMap(map);\n");
-			}
+			pf.write("line = [{lat: " + vertice1.darLatitud() + ", lng: " + vertice1.darLongitud() + "},{lat: " + vertice2.darLatitud() + ", lng: " + vertice2.darLongitud() + "}];\n");
+			pf.write("path = new google.maps.Polyline({path: line, strokeColor: '#FF0000', strokeWeight: 2});\n");
+			pf.write("path.setMap(map);\n");
 		}
 
 		boolean acabo = false;
@@ -496,7 +492,7 @@ public class MVCModelo{
 		int pos = 0;
 		for(int i = 0; pos < n; i++)
 		{
-			if(grafo.getInfoVertex(i) != null && grafo.getInfoVertex(i).velocidadPromedio() > 0)
+			if(grafo.getInfoVertex(i) != null && grafo.getInfoVertex(i).velocidadPromedio() > 0.0)
 			{
 				ordenar[pos]= grafo.getInfoVertex(i);
 				pos++;
