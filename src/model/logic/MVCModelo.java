@@ -628,9 +628,46 @@ public class MVCModelo{
 	}
 
 	//8B
-	public ArregloDinamico<Vertice> verticesAlcanzables(double Tiempo,double latorig,double lonOrig)
+	public Queue<Vertice> verticesAlcanzables(double Tiempo,double latorig,double lonOrig)
 	{
-		return null;
+		int actual = idMasCercano(latorig, lonOrig);
+
+		DijkstraUndirectedSP time = new DijkstraUndirectedSP(grafo, actual);
+
+		Graph<Integer, Vertice> grafop = new Graph<>(250000) ;
+
+		Queue<Vertice> respuesta = new Queue<>();
+
+		for(int i = 0; i < grafo.size(); i++)
+		{
+			Vertice Vactual = grafo.getInfoVertex(i);
+
+			if(Vactual == null)
+				continue;
+
+			if(time.distTo(i) < Tiempo)
+			{
+				respuesta.enqueue(Vactual);
+				grafop.addVertex(i, Vactual);
+
+				Iterator<Arco> arcos = time.pathTo(i).iterator();
+
+				while(arcos.hasNext())
+				{
+					Arco Aactual = arcos.next();
+					grafop.addEdge(Aactual.darOrigen(), Aactual.darDest(), Aactual.darCostoTiempo());
+				}
+			}
+		}
+
+		try {
+			crearMapa(grafop, "8B");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return respuesta;
 	}
 
 	//9B
@@ -668,20 +705,176 @@ public class MVCModelo{
 	//C
 	//----------------------------------------
 	//10C
-	public void grafoSimplificado()
+	public Graph<Integer, Vertice> grafoSimplificado()
 	{
+		Graph<Integer, Vertice> respuesta = new Graph<>(1160);
 
+		for(int i = 0; i < grafo.size(); i++)
+		{
+			Vertice actual = grafo.getInfoVertex(i);
+			Iterator<Vertice> x =grafo.adj(i).iterator();
+			if(x.hasNext())
+				x.next();
+			if(actual != null && !x.hasNext())
+			{
+				respuesta.addVertex(actual.darMID()-1, actual);
+			}
+		}
+
+		for(int j = 0; j < grafo.arcos.darTamano(); j++)
+		{
+			Arco actual = grafo.arcos.darElemento(j);
+			Vertice origen = grafo.getInfoVertex(actual.darOrigen());
+			Vertice destino = grafo.getInfoVertex(actual.darDest());
+
+			boolean yaExisteArco = false;
+			for(int k = 0; k < origen.arcos.darTamano(); k++)
+			{
+				Arco actual2 = origen.arcos.darElemento(k);
+
+				if(actual.darOrigen() == actual2.darOrigen() && actual.darDest() == actual2.darDest())
+				{
+					yaExisteArco = true;
+				}
+			}
+
+			if(origen.darMID() != destino.darMID())
+				respuesta.addEdge(origen.darMID()-1, destino.darMID()-1, 0);
+		}
+
+		Integer[][] costos = new Integer[1160][1160];
+
+		for(int l = 0; l < viajes.length; l++)
+		{
+			ArregloDinamico<UBERTrip> grupoActual = viajes[l];
+			for(int m = 0; m < grupoActual.darTamano(); m++)
+			{
+				UBERTrip actual = grupoActual.darElemento(m);
+				double[] datos = actual.darDatosViaje();
+				if(costos[(int)datos[0]-1][(int)datos[1]-1] == null)
+					costos[(int)datos[0]-1][(int)datos[1]-1] = (int)datos[3];
+				else
+					costos[(int)datos[0]-1][(int)datos[1]-1] += (int)datos[3];
+			}
+		}
+
+		for(int n = 0; n < 1160; n++)
+		{
+			for(int o = 0; o < 1160; o++)
+			{
+				int costo = 200;
+				if(costos[n][o] != null)
+				{
+					grafo.setCostArcTime(n, n, costo);
+				}
+			}
+		}
+
+		try {
+			crearMapa(respuesta, "10C");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return respuesta;
 	}
 
 	//11C
-	public ArregloDinamico<Vertice> dijkstra(int idOrigen, int idDestino)
+	public DijkstraUndirectedSPdist dijkstraC(int idOrigen, int idDestino)
 	{
-		return null;
+		Graph< Integer, Vertice> simple = grafoSimplificado();
+		DijkstraUndirectedSPdist dSimple = new DijkstraUndirectedSPdist(simple,idOrigen);
+		Graph< Integer, Vertice> grafoR =  new Graph<>(250000);
+		//Parte de graficar
+		Stack<Arco> arcos = (Stack<Arco>) dijkstraDist.pathTo(idDestino);
+		while(arcos != null && !arcos.isEmpty())
+		{
+			Arco actual = arcos.pop();
+
+			Vertice vactualorig = grafo.getInfoVertex(actual.darOrigen());
+			Vertice vactualdes = grafo.getInfoVertex(actual.darDest());
+
+			grafoR.addVertex(vactualorig.darId(), vactualorig);
+			grafoR.addVertex(vactualdes.darId(), vactualdes);
+
+			grafoR.addEdge(actual.darOrigen(), actual.darDest(), actual.darCostoDistancia());
+		}
+
+		try {
+			crearMapa(grafoR, "11C");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return dSimple;
 	}
 
 	//12C
-	public ArregloDinamico<Vertice> camninosMenorLong(int idOrigen)
+	public Queue<Arco> camninosMenorLong(int idOrigen)
 	{
+		if(grafo.getInfoVertex(idOrigen) != null)
+		{
+			dijkstraDist = new DijkstraUndirectedSPdist(grafo, idOrigen);
+			int maximo = 0;
+			Iterable<Arco> camino = null;
+
+			for(int i= 0; i < grafo.size(); i++)
+			{
+				Vertice actual = grafo.getInfoVertex(i);
+				if(actual != null && dijkstraDist.hasPathTo(i))
+				{
+					Iterable<Arco> caminoActual = dijkstraDist.pathTo(i);
+					if(((Stack)caminoActual).size() > maximo)
+					{
+						maximo = ((Stack)caminoActual).size();
+						camino = caminoActual;
+					}
+				}	
+			}
+
+			Queue<Arco> respuesta = new Queue<>();
+
+			Graph<Integer, Vertice> graficar = new Graph<>(250000);
+			Iterator<Arco> arcos = camino.iterator();
+			graficar.addVertex(idOrigen, grafo.getInfoVertex(idOrigen));
+
+			while(arcos.hasNext())
+			{
+				Arco actual = arcos.next();
+				respuesta.enqueue(actual);
+
+				graficar.addVertex(actual.darDest(), grafo.getInfoVertex(actual.darDest()));
+				graficar.addEdge(actual.darOrigen(), actual.darDest(), actual.darCostoTiempo());
+			}
+
+			try {
+				crearMapa(graficar, "12C");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return respuesta;
+		}
 		return null;
+	}
+
+	public double tiempoEntreDosZonas(int idOrigen, int idDestino)
+	{
+		ArregloDinamico<UBERTrip> actual = viajes[idOrigen];
+		Double tiempo = null;
+		for(int i = 0; i < actual.darTamano() && tiempo == null; i++)
+		{
+			if(actual.darElemento(i).darDatosViaje()[1] == idDestino)
+			{
+				tiempo = actual.darElemento(i).darDatosViaje()[3];
+			}
+		}
+		if(tiempo != null)
+			return tiempo;
+		else
+			return 200;
 	}
 }

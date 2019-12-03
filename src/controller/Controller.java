@@ -4,7 +4,9 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import model.data_structures.ArregloDinamico;
+import model.data_structures.DijkstraUndirectedSPdist;
 import model.data_structures.Graph;
+import model.data_structures.Queue;
 import model.data_structures.Stack;
 import model.logic.Arco;
 import model.logic.MVCModelo;
@@ -200,9 +202,9 @@ public class Controller {
 					System.out.println("Debe ingresar un valor numérico\n---------");
 					break;
 				}
-				
+
 				ArregloDinamico<Vertice> menores = modelo.verticesMenorVel(numero);
-				
+
 				for(int i = 0 ; i < menores.darTamano(); i++)
 				{
 					Vertice actual = menores.darElemento(i);
@@ -297,8 +299,56 @@ public class Controller {
 					System.out.println("La distancia de viaje entre los vértices es: " + modelo.darDistanciaDIJK(blatitudO, blongitudO, blatitudD, blongitudD) + " kilómetros\n---------");
 
 				}
-				
+
 				break;
+
+			case 9:
+
+				double latitudO;
+				double longitudO;
+				double Tiempo;
+				try
+				{
+					System.out.println("--------- \nDar latitud de origen a buscar: ");
+					latitudO = lector.nextDouble();
+					System.out.println("--------- \nDar longitud de origen a buscar: ");
+					longitudO = lector.nextDouble();
+					System.out.println("--------- \nDar tiempo máximo: ");
+					Tiempo = lector.nextDouble();
+
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+
+				Queue<Vertice> vertices = modelo.verticesAlcanzables(Tiempo, latitudO, longitudO);
+
+				if(vertices.size() == 0)
+				{
+					System.out.println("---------\nNo hay ningun vértice alcanzable desde las cordenadas ingresadas\n---------");
+					break;
+				}
+				else
+				{
+					System.out.println("---------\nLos vertices son \n");
+					int contador = 1;
+					while(vertices.isEmpty() == false)
+					{
+						Vertice veactual = vertices.dequeue();
+						System.out.println("---------\nEl vertice numero"+ contador);
+						contador ++;
+						System.out.println("---------\nID: "+veactual.darId());
+						System.out.println("---------\nLatitud: "+veactual.darLatitud());
+						System.out.println("---------\nLongitud: "+veactual.darLongitud());
+					}
+
+
+					break;
+				}
+
+
 
 			case 10:
 
@@ -326,6 +376,92 @@ public class Controller {
 				System.out.println("El número de vértices del grafo es: " + kruskal.V());
 
 				System.out.println("El costo total del grafo es: " + costoTotal2 + " kilómetros\n---------");
+				System.out.println("---------\nLa cantidad de vertices fue: " + duration2 + " milisegundos");
+
+				break;
+			case 11:
+				Graph<Integer,Vertice> grafo = modelo.grafoSimplificado();
+				System.out.println("---------\nLa cantidad de vertices fue: " + grafo.V());
+				System.out.println("---------\nLa cantidad de arcos fue: " + grafo.arcos.darTamano());
+				break;
+			case 12:
+
+
+				int destino;
+				int origen;
+
+				try
+				{
+					System.out.println("--------- \nDar Id de origen a buscar: ");
+					origen = (int) lector.nextDouble();
+					System.out.println("--------- \nDar Id de destino a buscar: ");
+					destino= (int) lector.nextDouble();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+
+				long startTime4 = System.currentTimeMillis(); // Medición tiempo actual
+
+				DijkstraUndirectedSPdist grafoC = modelo.dijkstraC(destino, origen);
+				Stack<Arco> caminoc = (Stack<Arco>) grafoC.pathTo(destino);
+
+				long endTime4 = System.currentTimeMillis(); // Medición tiempo actual
+				long duration4 = endTime4 - startTime4; // Duracion de ejecucion del algoritmo
+
+				System.out.println("---------\nLa duración del algoritmo fue: " + duration4 + " milisegundos");
+
+				System.out.println("El vertice 1 es: " + origen);
+
+				int contador = 2;
+				double tiempo = 0;
+				while(caminoc.isEmpty() == false)
+				{
+					Arco actual=  caminoc.pop();
+					System.out.println("El vertice " + contador + " es: " + actual.darDest());
+					contador++;
+					tiempo += actual.darCostoTiempo();
+				}
+				System.out.println("Su costo total en tiempo es: " + tiempo);
+				System.out.println("El tiempo promedio entre las zonas dadas es: " + modelo.tiempoEntreDosZonas(origen, destino));
+
+				break;
+				
+			case 13:
+
+				int idC; 
+				try
+				{
+					System.out.println("--------- \nDar id de origen: ");
+					idC = (int) lector.nextDouble();
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("Debe ingresar un valor numérico\n---------");
+					break;
+				}
+				long startTime3 = System.currentTimeMillis(); // Medición tiempo actual
+
+				Queue<Arco> arcos = modelo.camninosMenorLong(idC);
+
+				long endTime3 = System.currentTimeMillis(); // Medición tiempo actual
+				long duration3 = endTime3 - startTime3; // Duracion de ejecucion del algoritmo
+
+				System.out.println("El tiempo que toma el metodo es "+duration3 + " milisegundos");
+				System.out.println("La cantidad de arcos fue "+arcos.size() );
+				System.out.println("El vertice 1 es: " + idC);
+
+				int contadorx = 2;
+
+				while(arcos.isEmpty() == false)
+				{
+					Arco actual=  arcos.dequeue();
+					System.out.println("El vertice " + contadorx + " es: " + actual.darDest());
+					contadorx++;
+				}
+
 
 				break;
 

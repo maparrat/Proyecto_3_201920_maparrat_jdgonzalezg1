@@ -151,6 +151,10 @@ public class Graph<K,V> implements IGraph<K, V>
 	public void setCostArc(K idVertexIni, K idVertexFin, double cost) {
 		arcos.buscar(new Arco((int)idVertexIni, (int)idVertexFin, 0, 0, 0)).cambiarCostoDistancia(cost);
 	}
+	
+	public void setCostArcTime(K idVertexIni, K idVertexFin, double cost) {
+		arcos.buscar(new Arco((int)idVertexIni, (int)idVertexFin, 0, 0, 0)).cambiarCostoTiempo(cost);
+	}
 
 	public void addVertex(K idVertex, V infoVertex)
 	{
