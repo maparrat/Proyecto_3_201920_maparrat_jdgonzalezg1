@@ -315,7 +315,6 @@ public class Controller {
 					longitudO = lector.nextDouble();
 					System.out.println("--------- \nDar tiempo máximo: ");
 					Tiempo = lector.nextDouble();
-
 				}
 				catch(InputMismatchException e)
 				{
@@ -348,8 +347,6 @@ public class Controller {
 					break;
 				}
 
-
-
 			case 10:
 
 				long startTime2 = System.currentTimeMillis(); // Medición tiempo actual
@@ -379,16 +376,19 @@ public class Controller {
 				System.out.println("---------\nLa cantidad de vertices fue: " + duration2 + " milisegundos");
 
 				break;
+				
 			case 11:
+				
 				Graph<Integer,Vertice> grafo = modelo.grafoSimplificado();
 				System.out.println("---------\nLa cantidad de vertices fue: " + grafo.V());
 				System.out.println("---------\nLa cantidad de arcos fue: " + grafo.arcos.darTamano());
+				
 				break;
+				
 			case 12:
 
-
-				int destino;
 				int origen;
+				int destino;		
 
 				try
 				{
@@ -461,7 +461,6 @@ public class Controller {
 					System.out.println("El vertice " + contadorx + " es: " + actual.darDest());
 					contadorx++;
 				}
-
 
 				break;
 
